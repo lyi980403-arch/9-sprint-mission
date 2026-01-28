@@ -16,9 +16,13 @@ import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import java.util.List;
 import java.util.UUID;
+
+@Configurable
 
 public class JavaApplication {
     static void userCRUDTest(UserService userService) {
@@ -93,7 +97,9 @@ public class JavaApplication {
     }
 
     public static void main(String[] args) {
+        //ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
         // 레포지토리 초기화
+
         UserRepository userRepository = new FileUserRepository();
         ChannelRepository channelRepository = new FileChannelRepository();
         MessageRepository messageRepository = new FileMessageRepository();
