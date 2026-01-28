@@ -7,44 +7,64 @@ import java.util.UUID;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final UUID userId;
-    private String userName;
+    private UUID id;
+    private Long createdAt;
+    private Long updatedAt;
+    //
+    private String username;
     private String email;
     private String password;
 
-    private final long createdAt;
-    private long updatedAt;
-
-    public User(String userName, String email, String password) {
-        this.userId = UUID.randomUUID();
-        this.createdAt = Instant.now().toEpochMilli();
-        this.updatedAt = Instant.now().toEpochMilli();
-        this.userName = userName;
+    public User(String username, String email, String password) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+        //
+        this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getId() {
+        return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public long getCreatedAt() {
-        return createdAt;
+    public String getPassword() {
+        return password;
     }
 
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
+    public void update(String newUsername, String newEmail, String newPassword) {
+        boolean anyValueUpdated = false;
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+            anyValueUpdated = true;
+        }
+        if (newEmail != null && !newEmail.equals(this.email)) {
+            this.email = newEmail;
+            anyValueUpdated = true;
+        }
+        if (newPassword != null && !newPassword.equals(this.password)) {
+            this.password = newPassword;
+            anyValueUpdated = true;
+        }
 
-    public deleteUser() {
-        return null;
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }
