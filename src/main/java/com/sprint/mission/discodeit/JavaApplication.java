@@ -71,7 +71,7 @@ public class JavaApplication {
         // 수정
         Message updatedMessage = messageService.update(message.getId(), "반갑습니다.");
         System.out.println("메시지 수정: " + updatedMessage.getContent());
-        // 삭재
+        // 삭제
         messageService.delete(message.getId());
         List<Message> foundMessagesAfterDelete = messageService.findAll();
         System.out.println("메시지 삭제: " + foundMessagesAfterDelete.size());
