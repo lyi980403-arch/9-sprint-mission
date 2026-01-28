@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import java.util.List;
 import java.util.UUID;
 
-@Configurable
 
 public class JavaApplication {
     static void userCRUDTest(UserService userService) {
@@ -97,18 +96,17 @@ public class JavaApplication {
     }
 
     public static void main(String[] args) {
-        //ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
-        // 레포지토리 초기화
-
+//        // 레포지토리 초기화
+//
         UserRepository userRepository = new FileUserRepository();
         ChannelRepository channelRepository = new FileChannelRepository();
         MessageRepository messageRepository = new FileMessageRepository();
-
-        // 서비스 초기화
+//
+//        // 서비스 초기화
         UserService userService = new BasicUserService(userRepository);
         ChannelService channelService = new BasicChannelService(channelRepository);
         MessageService messageService = new BasicMessageService(messageRepository, channelRepository, userRepository);
-
+//
         // 셋업
         User user = setupUser(userService);
         Channel channel = setupChannel(channelService);
