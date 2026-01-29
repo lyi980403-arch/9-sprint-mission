@@ -34,27 +34,4 @@ public class RPConfig {
         return new FileMessageRepository();
     }
 
-    // Service Beans
-    @Bean
-    public ChannelService channelService(ChannelRepository channelRepository) {
-        return new BasicChannelService(channelRepository);
-    }
-
-    @Bean
-    public UserService userService(UserRepository userRepository) {
-        return new BasicUserService(userRepository);
-    }
-
-    @Bean
-    public MessageService messageService(
-            MessageRepository messageRepository,
-            ChannelRepository channelRepository,
-            UserRepository userRepository
-    ) {
-        return new BasicMessageService(
-                messageRepository,
-                channelRepository,
-                userRepository
-        );
-    }
 }

@@ -10,16 +10,14 @@ import com.sprint.mission.discodeit.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
 
 import java.util.List;
 import java.util.UUID;
 
-@Configuration
 @SpringBootApplication
 public class DiscodeitApplication {
-	@Bean
+
 	static void userCRUDTest(UserService userService) {
 		// 생성
 		User user = userService.create("woody", "woody@codeit.com", "woody1234");
@@ -37,7 +35,7 @@ public class DiscodeitApplication {
 		List<User> foundUsersAfterDelete = userService.findAll();
 		System.out.println("유저 삭제: " + foundUsersAfterDelete.size());
 	}
-	@Bean
+
 	static void channelCRUDTest(ChannelService channelService) {
 		// 생성
 		Channel channel = channelService.create(ChannelType.PUBLIC, "공지", "공지 채널입니다.");
@@ -55,7 +53,7 @@ public class DiscodeitApplication {
 		List<Channel> foundChannelsAfterDelete = channelService.findAll();
 		System.out.println("채널 삭제: " + foundChannelsAfterDelete.size());
 	}
-	@Bean
+
 	static void messageCRUDTest(MessageService messageService) {
 		// 생성
 		UUID channelId = UUID.randomUUID();
@@ -75,17 +73,17 @@ public class DiscodeitApplication {
 		List<Message> foundMessagesAfterDelete = messageService.findAll();
 		System.out.println("메시지 삭제: " + foundMessagesAfterDelete.size());
 	}
-	@Bean
+
 	static User setupUser(UserService userService) {
 		User user = userService.create("woody", "woody@codeit.com", "woody1234");
 		return user;
 	}
-	@Bean
+
 	static Channel setupChannel(ChannelService channelService) {
 		Channel channel = channelService.create(ChannelType.PUBLIC, "공지", "공지 채널입니다.");
 		return channel;
 	}
-	@Bean
+
 	static void messageCreateTest(MessageService messageService, Channel channel, User author) {
 		Message message = messageService.create("안녕하세요.", channel.getId(), author.getId());
 		System.out.println("메시지 생성: " + message.getId());
