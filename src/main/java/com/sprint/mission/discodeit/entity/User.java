@@ -10,20 +10,27 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private Long createdAt;
-    private Long updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
+    private UUID profileId;
     //
     private String username;
     private String email;
     private String password;
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, Instant createAt) {
         this.id = UUID.randomUUID();
-        this.createdAt = Instant.now().getEpochSecond();
+        this.createdAt = createAt;
+        this.updatedAt = createAt;
         //
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public void updateProfileId(UUID profileId) {
+        this.profileId = profileId;
+        this.updatedAt = Instant.now();
     }
 
 //    public UUID getId() {
@@ -66,7 +73,7 @@ public class User implements Serializable {
         }
 
         if (anyValueUpdated) {
-            this.updatedAt = Instant.now().getEpochSecond();
+            this.updatedAt = Instant.now();
         }
     }
 }
