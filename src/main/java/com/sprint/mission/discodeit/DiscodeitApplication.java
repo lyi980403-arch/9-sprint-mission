@@ -1,12 +1,12 @@
 package com.sprint.mission.discodeit;
 
-import com.sprint.mission.discodeit.dto.UserResponse;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 import org.springframework.boot.SpringApplication;
@@ -24,10 +24,10 @@ public class DiscodeitApplication {
 	static void userCRUDTest(UserService userService) {
 		// 생성
 		UserCreateRequest userCreateRequest = new UserCreateRequest("woody", "woody@codeit.com", "woody1234");
-		User user = userService.create(userCreateRequest, Optional.empty());
+		UserResponse user = userService.create(userCreateRequest, Optional.empty());
 		System.out.println("유저 생성: " + user.getId());
 		// 조회
-		UserResponse userResponse
+//		UserResponse userResponse
 		User foundUser = userService.find(user.getId());
 		System.out.println("유저 조회(단건): " + foundUser.getId());
 		List<User> foundUsers = userService.findAll();

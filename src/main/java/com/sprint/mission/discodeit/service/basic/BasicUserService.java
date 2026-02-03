@@ -1,11 +1,12 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.UserResponse;
-import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.dto.user.UserResponse;
+import com.sprint.mission.discodeit.dto.user.BinaryContentCreateRequest;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.status.UserStatus;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class BasicUserService implements UserService {
 //    }
 
     @Override
-    public User create(UserCreateRequest userCreateRequest, Optional<BinaryContentCreateRequest> binaryContentCreateRequest) {
+    public UserResponse create(UserCreateRequest userCreateRequest, Optional<BinaryContentCreateRequest> binaryContentCreateRequest) {
         User createdUser = new User(userCreateRequest.username(), userCreateRequest.email(), userCreateRequest.password());
         return userRepository.save(createdUser);
     }
@@ -43,21 +44,39 @@ public class BasicUserService implements UserService {
 
     @Override
     public UserResponse find(UUID userId) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
-        UserStatus status = UserStatusRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoSuchElementException("User status not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("User not found: " + userId)
+                );
+
+        boolean isOnline = userStatusRepository.findByUserId(userId)
+                .map(UserStatus::isOnline) // 마지막 접속 5분 이내인지
+                .orElse(false);
+
+        UUID profileId = binaryContentRepository.findProfileByUserId(userId)
+                .map(BinaryContent::getId)
+                .orElse(null);
+
         return new UserResponse(
                 user.getId(),
-                user.getUsername()
-
-        )
+                user.getUsername(),
+                user.getEmail(),
+                profileId,
+                isOnline,
+                user.getCreatedAt()
+        );
     }
+
+
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream()
+                .map(user -> find(user.getId()))
+                .toList();
     }
+
 
     @Override
     public User update(UUID userId, String newUsername, String newEmail, String newPassword) {
