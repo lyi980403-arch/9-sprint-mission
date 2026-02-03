@@ -1,12 +1,18 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.UserResponse;
+import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.status.UserStatus;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -17,16 +23,35 @@ public class BasicUserService implements UserService {
 //        this.userRepository = userRepository;
 //    }
 
-    @Override
-    public User create(String userName, String email, String password) {
-        User user = new User(userName, email, password);
-        return userRepository.save(user);
-    }
+//    @Override
+//    public User create(String userName, String email, String password) {
+//        User user = new User(userName, email, password);
+//        return userRepository.save(user);
+//    }
 
     @Override
-    public User find(UUID userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+    public User create(UserCreateRequest userCreateRequest, Optional<BinaryContentCreateRequest> binaryContentCreateRequest) {
+        User createdUser = new User(userCreateRequest.username(), userCreateRequest.email(), userCreateRequest.password());
+        return userRepository.save(createdUser);
+    }
+
+//    @Override
+//    public User find(UUID userId) {
+//        return userRepository.findById(userId)
+//                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+//    }
+
+    @Override
+    public UserResponse find(UUID userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        UserStatus status = UserStatusRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException("User status not found"));
+        return new UserResponse(
+                user.getId(),
+                user.getUsername()
+
+        )
     }
 
     @Override

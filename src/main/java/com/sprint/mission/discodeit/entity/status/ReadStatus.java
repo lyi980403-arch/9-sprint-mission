@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.status;
+package com.sprint.mission.discodeit.entity.status;
 
 import lombok.Getter;
 

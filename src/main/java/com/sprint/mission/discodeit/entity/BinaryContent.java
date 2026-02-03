@@ -11,21 +11,19 @@ public class BinaryContent {
     private final UUID id;
     private final String filename;
     private final String contentType;
-    private final byte[] data;
+    private final byte[] bytes;
     private final Instant createdAt;
 
     public BinaryContent(
-            UUID id,
             String filename,
             String contentType,
-            byte[] data,
-            Instant createdAt
+            byte[] bytes
     ) {
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.filename = filename;
         this.contentType = contentType;
-        this.data = data;
-        this.createdAt = createdAt;
+        this.bytes = bytes;
+        this.createdAt = Instant.now();
     }
 }
 

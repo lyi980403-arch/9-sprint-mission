@@ -1,10 +1,12 @@
 package com.sprint.mission.discodeit;
 
+import com.sprint.mission.discodeit.dto.UserResponse;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootApplication
@@ -20,9 +23,11 @@ public class DiscodeitApplication {
 
 	static void userCRUDTest(UserService userService) {
 		// 생성
-		User user = userService.create("woody", "woody@codeit.com", "woody1234");
+		UserCreateRequest userCreateRequest = new UserCreateRequest("woody", "woody@codeit.com", "woody1234");
+		User user = userService.create(userCreateRequest, Optional.empty());
 		System.out.println("유저 생성: " + user.getId());
 		// 조회
+		UserResponse userResponse
 		User foundUser = userService.find(user.getId());
 		System.out.println("유저 조회(단건): " + foundUser.getId());
 		List<User> foundUsers = userService.findAll();
@@ -75,7 +80,8 @@ public class DiscodeitApplication {
 	}
 
 	static User setupUser(UserService userService) {
-		User user = userService.create("woody", "woody@codeit.com", "woody1234");
+		UserCreateRequest userCreateRequest = new UserCreateRequest("woody", "woody@codeit.com", "woody1234");
+		User user = userService.create(userCreateRequest, Optional.empty());
 		return user;
 	}
 
@@ -95,9 +101,13 @@ public class DiscodeitApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
 		// 서비스 초기화
 		// TODO context에서 Bean을 조회하여 각 서비스 구현체 할당 코드 작성하세요.
-		UserService userService;
+		UserService userService = context.getBean(UserService.class);
 		ChannelService channelService;
 		MessageService messageService;
+
+		userCRUDTest(userService);
+//		userCRUDTest(channelService);
+//		userCRUDTest(messageService);
 	}
 
 }
