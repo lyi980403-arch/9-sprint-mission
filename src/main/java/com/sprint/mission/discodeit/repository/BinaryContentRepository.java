@@ -17,5 +17,7 @@ public interface BinaryContentRepository {
     boolean existsById(UUID id);
 
     void deleteById(UUID id);
+
+    Optional<BinaryContent> findProfileByUserId(UUID userId);
 }
 

@@ -8,6 +8,9 @@ import com.sprint.mission.discodeit.repository.file.FileChannelRepository;
 import com.sprint.mission.discodeit.repository.file.FileMessageRepository;
 import com.sprint.mission.discodeit.repository.file.FileUserRepository;
 //import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.repository.jcf.JCFBinaryContentRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserStatusRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -59,6 +62,13 @@ public class RPConfig {
     }
 
     @Bean
-    public ReadStatusRepository readStatusRepository()
+    public UserStatusRepository userStatusRepository() {
+        return new JCFUserStatusRepository();
+    }
+
+    @Bean
+    public BinaryContentRepository binaryContentRepository() {
+        return new JCFBinaryContentRepository();
+    }
 
 }

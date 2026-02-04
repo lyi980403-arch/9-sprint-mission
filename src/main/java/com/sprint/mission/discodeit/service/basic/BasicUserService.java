@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.user.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.status.UserStatus;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.dto.user.UserCreateRequest;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BasicUserService implements UserService {
     private final UserRepository userRepository;
+    private final UserStatusRepository userStatusRepository;
+    private final BinaryContentRepository binaryContentRepository;
 
 //    public BasicUserService(UserRepository userRepository) {
 //        this.userRepository = userRepository;
@@ -33,7 +36,16 @@ public class BasicUserService implements UserService {
     @Override
     public UserResponse create(UserCreateRequest userCreateRequest, Optional<BinaryContentCreateRequest> binaryContentCreateRequest) {
         User createdUser = new User(userCreateRequest.username(), userCreateRequest.email(), userCreateRequest.password());
-        return userRepository.save(createdUser);
+        User savedUser = userRepository.save(createdUser);
+
+        return new UserResponse(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                null,
+                false,
+                savedUser.getCreatedAt()
+        );
     }
 
 //    @Override
@@ -68,6 +80,10 @@ public class BasicUserService implements UserService {
         );
     }
 
+    @Override
+    public List<User> findAll(UserResponse userResponse) {
+        return List.of();
+    }
 
 
     @Override
