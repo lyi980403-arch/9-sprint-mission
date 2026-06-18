@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -51,8 +52,7 @@ public class SecurityConfig {
       ObjectMapper objectMapper,
       JwtAuthenticationFilter jwtAuthenticationFilter,
       JwtLogoutHandler jwtLogoutHandler
-  )
-      throws Exception {
+  ) throws Exception {
     http
         .csrf(csrf -> csrf
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -89,9 +89,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        // Add JWT authentication filter
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-    ;
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 
@@ -117,10 +115,8 @@ public class SecurityConfig {
     return RoleHierarchyImpl.withDefaultRolePrefix()
         .role(Role.ADMIN.name())
         .implies(Role.USER.name(), Role.CHANNEL_MANAGER.name())
-
         .role(Role.CHANNEL_MANAGER.name())
         .implies(Role.USER.name())
-
         .build();
   }
 
@@ -132,7 +128,17 @@ public class SecurityConfig {
     return handler;
   }
 
+  /**
+   * 테스트 환경에서만 InMemoryJwtRegistry를 빈으로 등록합니다.
+   *
+   * 운영/개발 환경("!test")에서는 RedissonConfig가 RedissonClient를 제공하고
+   * RedisJwtRegistry(@Primary)가 자동으로 주입됩니다.
+   *
+   * 이전에 @Profile 없이 선언되어 있어서 항상 InMemoryJwtRegistry가 등록되고
+   * RedisJwtRegistry의 @Primary가 무시되는 문제가 있었습니다.
+   */
   @Bean
+  @Profile("test")
   public JwtRegistry jwtRegistry(JwtTokenProvider jwtTokenProvider) {
     return new InMemoryJwtRegistry(1, jwtTokenProvider);
   }

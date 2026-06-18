@@ -43,7 +43,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.security:spring-security-messaging'
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    testImplementation 'io.projectreactor:reactor-test'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
 
 
     runtimeOnly 'org.postgresql:postgresql'
@@ -63,6 +66,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-parameters'
 }
 
 test {
