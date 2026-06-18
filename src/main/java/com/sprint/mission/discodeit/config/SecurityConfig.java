@@ -57,6 +57,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+            .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/ws/**"))
         )
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")
@@ -76,6 +77,7 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/login"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/refresh"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/logout"),
+                AntPathRequestMatcher.antMatcher("/ws/**"),
                 new NegatedRequestMatcher(AntPathRequestMatcher.antMatcher("/api/**"))
             ).permitAll()
             .anyRequest().authenticated()
