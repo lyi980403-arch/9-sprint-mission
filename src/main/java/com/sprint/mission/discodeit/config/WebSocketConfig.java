@@ -41,34 +41,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         .setAllowedOriginPatterns("*")
         .withSockJS();
   }
-
-  @Override
-  public void configureClientInboundChannel(ChannelRegistration registration) {
-    registration.interceptors(new ChannelInterceptor() {
-      @Override
-      public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-          String token = accessor.getFirstNativeHeader("Authorization");
-          if (token != null && token.startsWith("Bearer ")) {
-            String jwt = token.substring(7);
-
-            if (jwtTokenProvider.validateAccessToken(jwt)
-                && jwtRegistry.hasActiveJwtInformationByAccessToken(jwt)) {
-
-              String username = jwtTokenProvider.getUsernameFromToken(jwt);
-              UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-              Authentication auth = new UsernamePasswordAuthenticationToken(
-                  userDetails, null, userDetails.getAuthorities());
-
-              accessor.setUser(auth);
-            }
-          }
-        }
-        return message;
-      }
-    });
-  }
 }
